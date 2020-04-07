@@ -8,7 +8,7 @@ namespace ThereWillBeGame
 {
 	public sealed class Game
 	{
-		private static double GlobalMilliseconds => DateTime.UtcNow.TimeOfDay.TotalMilliseconds;
+		public readonly int Columns, Rows;
 
 		public Game(int columns, int rows)
 		{
@@ -25,9 +25,8 @@ namespace ThereWillBeGame
 		public event Action<double> OnTick;
 		public event Action<ConsoleKeyInfo> OnKeyAvailable;
 
-		public int Columns { get; }
-		public int Rows { get; }
 		public int FPS { get; private set; }
+		private static double GlobalMilliseconds => DateTime.UtcNow.TimeOfDay.TotalMilliseconds;
 
 		public void Initialize()
 		{
