@@ -17,7 +17,7 @@ namespace ThereWillBeGame
 		{
 			Console.Title = _seconds.ToString();
 
-			_world = new SampleWorld(200, 40, 80, 20);
+			_world = new SampleWorld(100, 25, 80, 20);
 			_game = new Game(120, 30);
 
 			_game.OnRedraw += OnRedraw;
