@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 
+using ThereWillBeGame.Samples;
+
 namespace ThereWillBeGame
 {
 	public static class Program
 	{
-		private static World _world;
+		private static SampleWorld _world;
 		private static Game _game;
 
 		private static int _seconds;
@@ -15,7 +17,7 @@ namespace ThereWillBeGame
 		{
 			Console.Title = _seconds.ToString();
 
-			_world = new World(200, 40, 80, 20);
+			_world = new SampleWorld(200, 40, 80, 20);
 			_game = new Game(120, 30);
 
 			_game.OnRedraw += OnRedraw;
@@ -28,7 +30,6 @@ namespace ThereWillBeGame
 
 		/// <summary>
 		/// Вызывается каждый раз, когда нажата кнопка.
-		/// <para>Этот метод является частным случаем <see cref="Game.OnTick"/> и имеет аналогичные блокировки.</para>
 		/// </summary>
 		/// <param name="info">Содержит информацию о нажатой кнопке.</param>
 		private static void OnKeyAvailable(ConsoleKeyInfo info)
@@ -55,7 +56,6 @@ namespace ThereWillBeGame
 
 		/// <summary>
 		/// Вызывается каждый раз, когда игровой мир обновляется.
-		/// <para>Блокировки внутри этого метода замедляют обработку ввода и обновления игрового мира.</para>
 		/// </summary>
 		/// <param name="milliseconds">Количество миллисекунд с последнего обновления.</param>
 		private static void OnTick(double milliseconds)
@@ -71,7 +71,6 @@ namespace ThereWillBeGame
 
 		/// <summary>
 		/// Вызывается каждый раз, когда содержимое консоли будет перерисовано.
-		/// <para>Блокировки внутри этого метода замедляют отрисовку игрового мира (снижают FPS).</para>
 		/// </summary>
 		/// <param name="array">Буфер, который будет отрисован на экране.</param>
 		/// <param name="milliseconds">Количество миллисекунд с последнего вызова перерисовки.</param>

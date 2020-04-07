@@ -1,6 +1,6 @@
-﻿namespace ThereWillBeGame
+﻿namespace ThereWillBeGame.Samples
 {
-	public sealed class Player
+	public sealed class Player : IDrawableEntity
 	{
 		public char Icon => '@';
 
