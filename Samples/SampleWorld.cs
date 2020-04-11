@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace ThereWillBeGame.Samples
 {
@@ -30,8 +31,8 @@ namespace ThereWillBeGame.Samples
 			// Поставим игрока в центр игрового мира:
 			_player = new Player
 			{
-				X = (int) Math.Floor(columns / 2d),
-				Y = (int) Math.Floor(rows / 2d),
+				X = (int)Math.Floor(columns / 2d),
+				Y = (int)Math.Floor(rows / 2d),
 			};
 
 			// Подвидем «область видимости», чтобы игрок находился в центре:
@@ -39,6 +40,7 @@ namespace ThereWillBeGame.Samples
 
 			// Добавим игрока в список объектов, которые поддерживают отрисовку, чтобы он был виден на карте:
 			_entities.Add(_player);
+			SpawnHeart();
 		}
 
 		/// <summary>
@@ -83,8 +85,20 @@ namespace ThereWillBeGame.Samples
 			_player.X = x;
 			_player.Y = y;
 
+			CheckSpot(x, y);
 			// После каждого удачного движения персонажа сдвигаем «область видимости»:
 			CenterViewportAroundPlayer();
+		}
+		private void CheckSpot(int x, int y)
+		{
+			var entities = _entities.Where(e => e.X == x && e.Y == y).ToArray();
+			foreach (var e in entities)
+			{ 
+				if (e is Heart heart)
+				{
+					OnContactWithPlayer(heart);
+				}
+			}
 		}
 
 		private bool IsAvailableToPlayer(int y, int x)
@@ -101,6 +115,26 @@ namespace ThereWillBeGame.Samples
 		private void CenterViewportAroundPlayer()
 		{
 			CenterViewportAround(_player.Y, _player.X);
+		}
+		private void SpawnHeart()
+		{
+			var r = new Random();
+			var heart = new Heart
+			{
+				X = r.Next(0, Columns-1),
+				Y = r.Next(0, Rows-1),
+			};
+			IsAValidSpawnpoint(heart);
+			_entities.Add(heart);
+		}
+		private void IsAValidSpawnpoint(IDrawableEntity heart)
+		{
+			TryNewCoordinates(heart.X, heart.Y);
+		}
+		private void OnContactWithPlayer(Heart heart)
+		{
+		    _entities.Remove(heart);
+			SpawnHeart();
 		}
 	}
 }
