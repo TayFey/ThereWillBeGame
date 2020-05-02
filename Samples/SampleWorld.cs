@@ -9,6 +9,7 @@ namespace ThereWillBeGame.Samples
 	public sealed class SampleWorld : World
 	{
 		private readonly Player _player;
+		private readonly Random _random = new Random();
 
 		public SampleWorld(int columns, int rows, int viewportColumns, int viewportRows) : base(columns, rows, viewportColumns, viewportRows)
 		{
@@ -89,6 +90,7 @@ namespace ThereWillBeGame.Samples
 			// После каждого удачного движения персонажа сдвигаем «область видимости»:
 			CenterViewportAroundPlayer();
 		}
+
 		private void CheckSpot(int x, int y)
 		{
 			var entities = _entities.Where(e => e.X == x && e.Y == y).ToArray();
@@ -116,21 +118,29 @@ namespace ThereWillBeGame.Samples
 		{
 			CenterViewportAround(_player.Y, _player.X);
 		}
+
 		private void SpawnHeart()
 		{
-			var r = new Random();
-			var heart = new Heart
+			int x;
+			int y;
+
+			while (true)
 			{
-				X = r.Next(0, Columns-1),
-				Y = r.Next(0, Rows-1),
-			};
-			IsAValidSpawnpoint(heart);
-			_entities.Add(heart);
+				x = _random.Next(0, Columns - 1);
+				y = _random.Next(0, Rows - 1);
+				if (IsAvailableToPlayer(y, x))
+				{
+					_entities.Add(new Heart(x, y));
+					break;
+				}
+			}
 		}
-		private void IsAValidSpawnpoint(IDrawableEntity heart)
+
+		private bool IsAValidSpawnpoint(int y, int x)
 		{
-			TryNewCoordinates(heart.X, heart.Y);
+			return IsAvailableToPlayer(y, x) && !_entities.Any(e => e.X == x && e.Y == y);
 		}
+
 		private void OnContactWithPlayer(Heart heart)
 		{
 		    _entities.Remove(heart);
